@@ -1,0 +1,3 @@
+bat is used here to check 32bit vs 64bit computers and java versions (min v6 up to v8+)
+then starts the appropriate jar file with right dll
+(for java v6, javaf fx bin is integrated because only appears in v8)
