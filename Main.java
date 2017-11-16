@@ -1,4 +1,5 @@
 import javafx.application.Application;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -25,18 +26,24 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import javafx.embed.swing.SwingNode;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import java.awt.Dimension;
+
+import javax.swing.SwingUtilities;
 
 public class Main extends Application {
 	private static int isMoved = 0;
 	private static int isSwitched = 0;
 	private static boolean isColored = false;
 	private double stageWidth = 300.0;
-	private double stageHeight = 450.0;
+	private double stageHeight = 530.0;
 	private ArrayList<String> nbChar = null;
 	private String nCentre = null;
 	private String prm_input;
@@ -59,10 +66,11 @@ public class Main extends Application {
 			/////////////////\\\\\\\\\\\\\\\\\\
 
 			/* BORDERPANES */ 
-			//primaryScreenBounds est utilisée pour placer la fenêtre dans un coin 
+			//primaryScreenBounds est utilisÃ©e pour placer la fenÃªtre dans un coin 
 			final Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 			final BorderPane root = new BorderPane();
 			final BorderPane rootb = new BorderPane();
+
 			root.setStyle("-fx-background-color: #061E5F");
 			rootb.setStyle("-fx-background-color: #FF9B27");
 
@@ -70,10 +78,10 @@ public class Main extends Application {
 			final MenuBar menuBar = new MenuBar();
 			final Menu prmMenu = new Menu("Convertisseur PRM/PDS");
 			final Menu pdsMenu = new Menu("Convertisseur PDS/PRM");
-			//couleur orange (très clair)
-			prmMenu.setStyle("-fx-background-color: #F7D358");
+			//couleur orange (trÃ¨s clair)
+			prmMenu.setStyle("-fx-background-color: #FFB967");
 			//couleur bleu-ciel
-			pdsMenu.setStyle("-fx-background-color: #01A9D8");
+			pdsMenu.setStyle("-fx-background-color: #50618F");
 			menuBar.getMenus().setAll(pdsMenu, prmMenu);
 
 			/* SCENES */
@@ -92,7 +100,7 @@ public class Main extends Application {
 			InitVbox(vboxd4, "Centre incorrect !");
 			InitVbox(vboxd5, "Num\u00e9ro de PRM invalide !");
 
-			/* DIALOGUES D'ERREURS (fenêtres qui contiennent les vboxes) */
+			/* DIALOGUES D'ERREURS (fenÃªtres qui contiennent les vboxes) */
 			final Stage dialog1 = new Stage();
 			final Stage dialog2 = new Stage();
 			final Stage dialog3 = new Stage();
@@ -121,7 +129,7 @@ public class Main extends Application {
 			//convertBtn2.setStyle("-fx-background-radius: 5em");
 
 			/* LABELS + TEXTVIEWS + COMBOBOXES */
-			//bis = b, soit les éléments du 2nd onglet (cf doc pour plus de détails)
+			//bis = b, soit les Ã©lÃ©ments du 2nd onglet (cf doc pour plus de dÃ©tails)
 			final Label txtSt = new Label("Centre : ");
 			txtSt.setTextFill(Color.web("#ffffff"));
 			final Label txtStb = new Label("Centre : ");
@@ -195,6 +203,12 @@ public class Main extends Application {
 			txtF7.setPrefSize(30, 20);
 			txtF7b.setPrefSize(30, 20);
 
+			/* CREATION CODE BARRE */
+			//embeded jpanel (swing utility) into javafx scene
+			SwingNode swingNode = new SwingNode();
+			CodeBarrePanel modele = new CodeBarrePanel();
+        	createAndSetSwingContent(swingNode, modele);
+
 			/* CREATION DES CHAMPS (labels + textviews + comboboxes) */
 			HBox hb0 = new HBox();
 			HBox hb0b = new HBox();
@@ -208,33 +222,37 @@ public class Main extends Application {
 			HBox hb4b = new HBox();
 			HBox hb5 = new HBox();
 			HBox hb5b = new HBox();
-			hb0.setPadding(new Insets(-280, 50, -280, 50));
+			HBox hb6 = new HBox();
+
+			hb0.setPadding(new Insets(10, 50, 10, 50));
 		    hb0.getChildren().addAll(txtSt, cb);
 		    hb0.setSpacing(10);
             InitHBoxes(hb0b, new Insets(-100, 45, -100, 45), txtStb, cbb);
-            InitHBoxes(hb1, new Insets(-230, 60, -230, 60), txtPds, txtF1);
+            InitHBoxes(hb1, new Insets(60, 60, 60, 60), txtPds, txtF1);
             InitHBoxes(hb1b, new Insets(-290, 55, -290, 55), txtPdsb, txtF1b);
-            InitHBoxes(hb2, new Insets(-100, 56, -100, 56), txtPrm, txtF2);
+            InitHBoxes(hb2, new Insets(180, 56, 180, 56), txtPrm, txtF2);
             InitHBoxes(hb2b, new Insets(-150, 60, -150, 60), txtPrmb, txtF2b);
-            InitHBoxes(hb3, new Insets(-50, 60, -50, 60), txtEdl, txtF3);
+            InitHBoxes(hb3, new Insets(230, 60, 230, 60), txtEdl, txtF3);
             InitHBoxes(hb3b, new Insets(-50, 60, -50, 60), txtEdlb, txtF3b);
-            InitHBoxes(hb4, new Insets(0, 22, 0, 22), txtTc, txtF5);
+            InitHBoxes(hb4, new Insets(280, 22, 280, 22), txtTc, txtF5);
             InitHBoxes(hb4b, new Insets(0, 22, 0, 22), txtTcb, txtF5b);
-			hb5.setPadding(new Insets(50, 40, 50, 40));
+			hb5.setPadding(new Insets(330, 40, 330, 40));
 			hb5.getChildren().addAll(txtEn, txtF6, txtNc, txtF7);
 			hb5.setSpacing(10);
 			hb5b.setPadding(new Insets(50, 40, 50, 40));
 			hb5b.getChildren().addAll(txtEnb, txtF6b, txtNcb, txtF7b);
 			hb5b.setSpacing(10);
+			hb6.setPadding(new Insets(380, 20, 380, 20));
+			hb6.getChildren().add(swingNode);
 			VBox vb1 = new VBox(10);
-			vb1.setPadding(new Insets(-180, 110, -180, 110));
-			vb1.getChildren().addAll(convertBtn1);
+			vb1.setPadding(new Insets(110, 110, 110, 110));
+			vb1.getChildren().add(convertBtn1);
 			VBox vb2 = new VBox(10);
 			vb2.setPadding(new Insets(-230, 110, -230, 110));
-			vb2.getChildren().addAll(convertBtn2);
+			vb2.getChildren().add(convertBtn2);
 			final Group mvb1 = new Group();
 			final Group mvb2 = new Group();
-			mvb1.getChildren().addAll(hb1, hb2, hb3, hb4, hb5, hb0, vb1);
+			mvb1.getChildren().addAll(hb6, hb1, hb2, hb3, hb4, hb5, vb1, hb0);
 			mvb2.getChildren().addAll(hb1b, hb2b, hb3b, hb4b, hb5b, hb0b, vb2);
 
             ////////////////\\\\\\\\\\\\\\\\
@@ -246,13 +264,13 @@ public class Main extends Application {
 				@Override
 				public void handle(ActionEvent e) {
 					try {
-						//count permet de compter le nombre d'éléments du pds saisi
+						//count permet de compter le nombre d'Ã©lÃ©ments du pds saisi
 						int i, count;
 						boolean isCorrect=false;
 						String centre=null, edl=null;
 						pds = new char[9];
 						prm = new char[14];
-						//si l'utilisateur n'a pas selectionné d'élément dans la combobox alors erreur
+						//si l'utilisateur n'a pas selectionnÃ© d'Ã©lÃ©ment dans la combobox alors erreur
 						if(cb.getSelectionModel().getSelectedIndex() == -1) {
 							reinitValues(txtF2, txtF3, txtF5, txtF6, txtF7);
 							dialog3.show();
@@ -274,14 +292,14 @@ public class Main extends Application {
 							dialog1.show();
 							return;
 						}
-						//ajout de 0 au pds jusqu'à avoir une taille de pds max (9) 
+						//ajout de 0 au pds jusqu'Ã  avoir une taille de pds max (9) 
 						StringBuilder zeros = new StringBuilder();
 						if((count = txtF1.getText().length()) <= 9) {
 							for(i=0; i<(9-count); i++)
 								zeros.append('0');
 							setPds(zeros.toString() + txtF1.getText());
 						}
-						//controle sur la présence du numero de compteur (dernier element)
+						//controle sur la prÃ©sence du numero de compteur (dernier element)
 						if(Character.toUpperCase(pds_input.charAt(8)) == 'C'
 						|| Character.toUpperCase(pds_input.charAt(8)) == 'P') {
 						    reinitValues(txtF2, txtF3, txtF5, txtF6, txtF7); 
@@ -320,12 +338,15 @@ public class Main extends Application {
 								prm[i] = centre.charAt(i);
 							for(i=0; i<9; i++)
 								prm[i+3] = pds[i];
-							//remplissage des 2 derniers éléments du tab prm correspondant aux clées
+							//remplissage des 2 derniers Ã©lÃ©ments du tab prm correspondant aux clÃ©es
 							prm[12] = Character.forDigit(getX1(), 10);
 							prm[13] = Character.forDigit(getX2(), 10);
 							txtF2.setText(new String(prm));
 							txtF3.setText(edl.replaceFirst("^0+(?!$)", ""));
 							txtF7.setText(String.valueOf(prm[11]));
+							modele.modifie(new String(prm));
+							modele.revalidate();
+							modele.repaint();
 						}
 						else {
 							reinitValues(txtF2, txtF3, txtF5, txtF6, txtF7);
@@ -347,13 +368,13 @@ public class Main extends Application {
 						int i=0, zCount=0;
 						pds = new char[9];
 						setPrm(txtF1b.getText());
-						//centre prend comme valeur les 3 permiers éléments du champ prm
+						//centre prend comme valeur les 3 permiers Ã©lÃ©ments du champ prm
 						String centre = new String(Character.toString(prm_input.charAt(0))
 								+ Character.toString(prm_input.charAt(1))
 								+ Character.toString(prm_input.charAt(2)));
 						//controle sur la longeur du prm (14)
 						if(txtF1b.getText().length() == 14) {
-							//controle sur le prm saisi (cf doc pour plus de détails)
+							//controle sur le prm saisi (cf doc pour plus de dÃ©tails)
 							convertPds((txtF1b.getText().substring(3, 12)).toCharArray());
 							String verify = centre + String.valueOf(pds) + x1 + x2;
 							if(verify.equals(prm_input)) {
@@ -361,7 +382,7 @@ public class Main extends Application {
 									zCount++;
 									i++;
 								}
-								//controle sur la saisie (cf doc pour plus de détails)
+								//controle sur la saisie (cf doc pour plus de dÃ©tails)
 								if(!isColored) {
 									if(centre.toString().equals("764"))
 										cbb.setText("Guyane");
@@ -377,7 +398,7 @@ public class Main extends Application {
 									for(i=0; i<9; i++) {
 										if(i == 6) {
 											String edl = new String(pds);
-											//enlève les 0 inutiles au début et les 3 derniers elements du pds (lettres + num compteur)
+											//enlÃ¨ve les 0 inutiles au dÃ©but et les 3 derniers elements du pds (lettres + num compteur)
 											if(edl.substring(0, edl.length()-3).replaceFirst("^0+(?!$)", "").equals("0")) {
 												reinitValues(cbb, txtF2b, txtF3b, txtF5b, txtF6b, txtF7b);
 												dialog2.show();
@@ -415,7 +436,7 @@ public class Main extends Application {
 										//num de compteur
 										txtF7b.setText(String.valueOf(pds[pds.length-1]));
 									}
-									//num de pds en supprimant les 0 inutiles du début
+									//num de pds en supprimant les 0 inutiles du dÃ©but
 									txtF2b.setText(new String(pds).replaceFirst("^0+(?!$)", ""));
 								}
 								else {
@@ -445,7 +466,7 @@ public class Main extends Application {
 				public void handle(KeyEvent ke) {
 					//isEG, isCP et isCn correspondent aux lettres et au num de compteur
 					int i, isEG=0, isCP=0, isCn=0;
-					//isFollowed sert de controle à isEG et isCP
+					//isFollowed sert de controle Ã  isEG et isCP
 					//(true quand isEG=1 && isCP=0 ; false quand isEG=isCP=0 ou isEG=isCP=1)
 					boolean isFollowed = false;
 					//permet de controller si c'est une lettre autre que e,g,c,p
@@ -454,12 +475,12 @@ public class Main extends Application {
 					boolean isNumber = false;
 					isColored = false;
 					nbChar = new ArrayList<String>(Arrays.asList(txtF1.getText().split("(?!^)")));
-					//permet de ne pas afficher plus de 9 characteres et positionne le caret à la fin
+					//permet de ne pas afficher plus de 9 characteres et positionne le caret Ã  la fin
 					if(nbChar.size() > 9) {
 						txtF1.setText(txtF1.getText().substring(0, 9));
 						txtF1.positionCaret(9);
 					}
-					//série de controles sur la saisie (soit isColored reste false soit il devient true)
+					//sÃ©rie de controles sur la saisie (soit isColored reste false soit il devient true)
 					for(i=0; i<nbChar.size(); i++) {
 						if(!nbChar.get(i).matches("[0-9.]")) {
 							if(!nbChar.get(i).toUpperCase().matches("[EGCP]"))
@@ -549,7 +570,7 @@ public class Main extends Application {
 				@Override
 				public void handle(ActionEvent ae) {
 					nCentre = cb.getSelectionModel().getSelectedItem().toString();
-					//focus redirigé vers le texte en dessous après une selection
+					//focus redirigÃ© vers le texte en dessous aprÃ¨s une selection
 					txtF1.requestFocus();
 				}	
 			});
@@ -557,7 +578,7 @@ public class Main extends Application {
 			/* ACTION QUAND UNE TOUCHE EST PRESSE SUR LA SCENE1 */
 			root.setOnKeyReleased(new EventHandler<KeyEvent>() {
 				@Override
-				//permet de deplacer le focus des éléments en fonctions des touches
+				//permet de deplacer le focus des Ã©lÃ©ments en fonctions des touches
 				public void handle(KeyEvent event) {
 					switch(event.getCode()) {
 						case UP:
@@ -627,7 +648,7 @@ public class Main extends Application {
 			/* ACTION QUAND UNE TOUCHE EST PRESSE SUR LA SCENE2 */
 			rootb.setOnKeyReleased(new EventHandler<KeyEvent>() {
 				@Override
-				//permet de deplacer le focus des éléments en fonctions des touches
+				//permet de deplacer le focus des Ã©lÃ©ments en fonctions des touches
 				public void handle(KeyEvent event) {
 					switch(event.getCode()) {
 						case UP:
@@ -698,7 +719,7 @@ public class Main extends Application {
 			/* ACTION QUAND CLICK SUR LA SCENE1 */
 			root.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
 				@Override
-				//permet de placer le focus sur les éléments en fonction de l'endroit ou l'on clique sur la scene
+				//permet de placer le focus sur les Ã©lÃ©ments en fonction de l'endroit ou l'on clique sur la scene
 				public void handle(MouseEvent mv) {
 					int i;
 					//ferme tous les dialogues si click ailleur sur la scene1
@@ -714,7 +735,7 @@ public class Main extends Application {
 					}
 					else if(mv.getY() > 70 && mv.getY() < 140) {
 						txtF1.requestFocus();
-						//gère la position du caret dans le texte
+						//gÃ¨re la position du caret dans le texte
 						if(mv.getY() > 70 && mv.getY() < 115 ) {
 							for(i=0; i<=txtF1.getText().length(); i++) {
 								if(i == txtF1.getText().length() && mv.getX() > 100+(i*7))
@@ -754,7 +775,7 @@ public class Main extends Application {
 
 			/* ACTION QUAND CLICK SUR LA SCENE2 */
 			rootb.addEventFilter(MouseEvent.MOUSE_PRESSED, new EventHandler<MouseEvent>() {
-				//permet de placer le focus sur les éléments en fonction de l'endroit ou l'on clique sur la scene
+				//permet de placer le focus sur les Ã©lÃ©ments en fonction de l'endroit ou l'on clique sur la scene
 				@Override
 				public void handle(MouseEvent mv) {
 					int i;
@@ -768,7 +789,7 @@ public class Main extends Application {
 						prmMenu.fire();
 					if(mv.getY() > 25 && mv.getY() < 90) {
 						txtF1b.requestFocus();
-						//gère la position du caret dans le texte
+						//gÃ¨re la position du caret dans le texte
 						if(mv.getY() > 20 && mv.getY() < 70 ) {
 							for(i=0; i<=txtF1b.getText().length(); i++) {
 								if(i == txtF1b.getText().length() && mv.getX() > 100+(i*7))
@@ -813,7 +834,7 @@ public class Main extends Application {
 			/* ACTION QUAND CLICK SUR LE MENU PRM */
 			prmMenu.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
-				//réinitialise la page avec tous les éléments
+				//rÃ©initialise la page avec tous les Ã©lÃ©ments
 				public void handle(ActionEvent ae) {
 					isColored = false;
 					isMoved = 0;
@@ -832,7 +853,7 @@ public class Main extends Application {
 			/* ACTION QUAND CLICK SUR LE MENU PDS */
 			pdsMenu.setOnAction(new EventHandler<ActionEvent>() {
 				@Override
-				//réinitialise la page avec tous les éléments
+				//rÃ©initialise la page avec tous les Ã©lÃ©ments
 				public void handle(ActionEvent ae) {
 					isColored = false;
 					isMoved = 0;
@@ -874,11 +895,11 @@ public class Main extends Application {
 					.getResource("/icons/cal1.jpg").toExternalForm()));
 			primaryStage.setTitle("Convertisseur");
 			primaryStage.setResizable(false);
-			//place le stage dans le coin en bas à droite de windows
-			primaryStage.setX(primaryScreenBounds.getMinX() + primaryScreenBounds.getWidth() - 300);
-			primaryStage.setY(primaryScreenBounds.getMinY() + primaryScreenBounds.getHeight() - 450*1.5);
+			//place le stage dans le coin en bas Ã  droite de windows
+			primaryStage.setX(primaryScreenBounds.getMinX() + primaryScreenBounds.getWidth() - 350);
+			primaryStage.setY(primaryScreenBounds.getMinY() + primaryScreenBounds.getHeight() - 1000);
 			primaryStage.show();
-			//doit etre placé apres stage.show et permet de corriger les problèmes de fenêtrage 
+			//doit etre placÃ© apres stage.show et permet de corriger les problÃ¨mes de fenÃªtrage 
 			primaryStage.sizeToScene();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -923,10 +944,19 @@ public class Main extends Application {
 		for(i=0; i<args.length; i++)
 			args[i].setText("");
 	}
+
+	private void createAndSetSwingContent(SwingNode swingNode, CodeBarrePanel modele) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+            	modele.setPreferredSize(new Dimension(260, 110));
+                swingNode.setContent(modele);
+            }
+        });
+    }
 	
 	/* ALGO DE CONVERTION PDS -> PRM */
 	public void convertPds(char [] pds) {
-		// TODO Auto-generated method stub
 		int i;
 		int x1 = 0, x2 = 0;
 		for(i=0; i<pds.length; i++) {
@@ -977,7 +1007,7 @@ public class Main extends Application {
 		this.x2 = x2;
 	}
 	
-	/* GETTERS & SETTERS (Si création d'autres classes à l'avenir) */
+	/* GETTERS & SETTERS (Si crÃ©ation d'autres classes Ã  l'avenir) */
 	public void setPds(String pds_input) {
 		this.pds_input = pds_input;
 	}
