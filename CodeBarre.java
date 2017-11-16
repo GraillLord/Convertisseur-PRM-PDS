@@ -7,7 +7,7 @@ import java.awt.*;
  * @version 26/10/2017
  */
 public class CodeBarre {
-	// variables d'instance - remplacez l'exemple qui suit par le votre
+	// variables d'instance - code barre 128
 	private String entree, sortie;
 	private int bordX, bordH, hauteur, largeur;
 	
